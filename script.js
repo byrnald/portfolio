@@ -25,7 +25,7 @@
   });
 
   // Social placeholder links
-  var socialUrls = { github:'https://github.com/', linkedin:'https://www.linkedin.com/', twitter:'https://twitter.com/' };
+  var socialUrls = { github:'https://github.com/byrnald', linkedin:'https://www.linkedin.com/in/byron-aldas-86b718385/', twitter:'https://twitter.com/' };
   document.querySelectorAll('[data-social]').forEach(function(el){
     var key = el.getAttribute('data-social');
     if(socialUrls[key]){ el.setAttribute('href', socialUrls[key]); el.setAttribute('target','_blank'); el.setAttribute('rel','noopener noreferrer'); }
