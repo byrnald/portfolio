@@ -1,0 +1,8 @@
+import { BriefcaseBusiness, GraduationCap, Award } from "lucide-react";
+import { Reveal } from "@/components/ui/portfolio-motion";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { ExpandableRow } from "@/components/ui/expandable-row";
+import { education, experience } from "@/lib/portfolio-data";
+export function ExperienceSection() {
+  return <section id="experience" className="section container"><Reveal><SectionHeading index="05" label="A FOUNDATION TO BUILD ON" title="Experience & education" /><h3 className="subsection-label mono">EXPERIENCE</h3><div className="row-list">{experience.map(item => <ExpandableRow key={item.organization} title={item.organization} subtitle={item.role} badge={item.status} icon={<BriefcaseBusiness size={20} />}><ul className="list-disc space-y-3 pl-5">{item.details.map(detail => <li key={detail}>{detail}</li>)}</ul></ExpandableRow>)}</div><h3 className="subsection-label mono education-label">EDUCATION</h3><div className="education-list">{education.map(item => <article className="education-entry" key={item.organization}><span className="row-icon" aria-hidden="true"><GraduationCap size={21} /></span><div><h3>{item.organization}</h3><p>{item.degree}</p>{item.detail && <p className="education-detail">{item.detail}</p>}<span className="education-status mono">{item.status}</span></div></article>)}</div><div className="award-note"><Award size={18} aria-hidden="true" /><p><strong>National Science Foundation Scholarship</strong><span>Recognized for academic excellence and commitment to computer science.</span></p></div></Reveal></section>;
+}
