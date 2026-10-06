@@ -156,7 +156,7 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 600; line-height: 1.25;
 .pantry-backend>span:last-child { margin-left: auto; font-size: .6875rem; }
 .pantry-footnote { font-size: .6875rem; margin-top: .6rem; }
 .project-details .tech-tags { margin-top: .9rem; }
-.project-details .text-link { color: var(--foreground); margin-top: .7rem; }
+.project-details .text-link, .homelab-row .text-link { color: var(--foreground); margin-top: .7rem; }
 .section-note { color: var(--muted-foreground); font-size: .75rem; margin-top: 1rem; }
 .lab-intro { margin-bottom: 1rem; }
 .lab-panel { border: 1px solid var(--border); background: var(--background); border-radius: var(--radius); overflow: hidden; }
