@@ -10,4 +10,8 @@ import { SkillsSection } from "@/components/ui/skills-section";
 import { HomelabSection } from "@/components/ui/homelab-section";
 import { ConstellationBackground } from "@/components/ui/constellation-background";
 import { BorderBeam } from "@/components/ui/border-beam";
-export function Portfolio() { return <MotionConfig reducedMotion="user"><div className="portfolio-shell"><ConstellationBackground /><a href="#main-content" className="skip-link">Skip to content</a><PortfolioNav /><main id="main-content" tabIndex={-1}><div className="page-border-beams"><BorderBeam duration={12} size={400} /><BorderBeam duration={12} delay={6} size={400} tone="muted" /></div><PortfolioHero /><AboutSection /><SkillsSection /><ProjectShowcase /><HomelabSection /><ExperienceSection /><ContactSection /></main></div></MotionConfig>; }
+import { PortfolioCursor } from "@/components/ui/portfolio-cursor";
+
+const cursorEnabled = true;
+
+export function Portfolio() { return <MotionConfig reducedMotion="user">{cursorEnabled && <PortfolioCursor />}<div className="portfolio-shell"><ConstellationBackground /><a href="#main-content" className="skip-link">Skip to content</a><PortfolioNav /><main id="main-content" tabIndex={-1}><div className="page-border-beams"><BorderBeam duration={12} size={400} /><BorderBeam duration={12} delay={6} size={400} tone="muted" /></div><PortfolioHero /><AboutSection /><SkillsSection /><ProjectShowcase /><HomelabSection /><ExperienceSection /><ContactSection /></main></div></MotionConfig>; }
