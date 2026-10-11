@@ -81,6 +81,22 @@ main::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; wi
 .skip-link { position: fixed; top: -5rem; left: 1rem; z-index: 100; padding: .75rem 1rem; background: var(--primary); color: var(--primary-foreground); border-radius: var(--radius); }
 .skip-link:focus { top: 1rem; }
 .site-header { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--background) 93%, transparent); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+.lab-terminal { margin-block: 1.25rem; overflow: hidden; border: 1px solid var(--border); border-radius: .625rem; background: var(--card); font-family: var(--font-code); }
+.terminal-toolbar { display: flex; align-items: center; gap: .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: .6875rem; }
+.terminal-window-dots { display: flex; gap: .3rem; }
+.terminal-window-dots i { width: .4rem; height: .4rem; border-radius: 50%; background: var(--muted-foreground); opacity: .45; }
+.terminal-replay { margin-left: auto; display: inline-flex; align-items: center; gap: .35rem; border: 0; border-radius: .25rem; padding: .2rem; background: transparent; color: var(--muted-foreground); font: inherit; }
+.terminal-replay:hover { color: var(--foreground); }
+.terminal-transcript { padding: 1rem; font-size: .75rem; line-height: 1.9; overflow-wrap: anywhere; }
+.terminal-command { display: grid; margin-bottom: .6rem; color: var(--foreground); }
+.terminal-command>span { grid-area: 1 / 1; }
+.terminal-command-reserve { visibility: hidden; }
+.terminal-command b { font-weight: 400; color: var(--muted-foreground); }
+.terminal-caret { display: inline-block; width: .4rem; height: .85em; margin-left: .2rem; background: var(--foreground); }
+.terminal-caret.complete { opacity: .35; }
+.terminal-output { white-space: pre-wrap; opacity: 0; color: var(--muted-foreground); transition: opacity 180ms; }
+.terminal-output.revealed { opacity: 1; }
+.terminal-caption { padding: .65rem 1rem; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: .625rem; }
 .header-inner { min-height: 4.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .brand { font-size: .875rem; font-weight: 600; display: flex; gap: .5rem; align-items: center; }
 .brand span { color: var(--muted-foreground); font-weight: 400; }
