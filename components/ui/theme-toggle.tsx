@@ -1,16 +1,70 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+// I adapted the circle reveal from Magic UI and kept my saved theme preference.
+// https://magicui.design/docs/components/animated-theme-toggler — MIT, see vendor/magicui.LICENSE.md.
+const themeAnimationEnabled = true;
+
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const busy = useRef(false);
+  const active = useRef<ViewTransition | null>(null);
+  const animation = useRef<Animation | null>(null);
   useEffect(() => { setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light"); }, []);
-  function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    document.documentElement.classList.toggle("dark", next === "dark");
-    document.documentElement.style.colorScheme = next;
-    setTheme(next);
-    try { localStorage.setItem("portfolio-theme", next); } catch { /* If storage isn't available, my theme toggle still works. */ }
+  useEffect(() => () => {
+    active.current?.skipTransition();
+    animation.current?.cancel();
+    document.documentElement.removeAttribute("data-theme-reveal");
+    document.documentElement.style.removeProperty("--theme-reveal-start");
+  }, []);
+  async function toggleTheme(event: React.MouseEvent<HTMLButtonElement>) {
+    if (busy.current) return;
+    const root = document.documentElement;
+    const next = root.classList.contains("dark") ? "light" : "dark";
+    let applied = false;
+    const apply = () => {
+      if (applied) return;
+      applied = true;
+      root.classList.toggle("dark", next === "dark");
+      root.style.colorScheme = next;
+      setTheme(next);
+      try { localStorage.setItem("portfolio-theme", next); } catch { /* My toggle still works without storage. */ }
+    };
+    if (!themeAnimationEnabled || !document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      apply(); return;
+    }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+    const width = window.innerWidth, height = window.innerHeight;
+    const radius = Math.hypot(Math.max(x, width - x), Math.max(y, height - y));
+    // I use percentages so the reveal stays centered at fractional display scales.
+    const origin = `${x / width * 100}% ${y / height * 100}%`;
+    const from = `circle(0% at ${origin})`;
+    const to = `circle(${radius / (Math.hypot(width, height) / Math.SQRT2) * 100}% at ${origin})`;
+    busy.current = true;
+    root.dataset.themeReveal = "active";
+    root.style.setProperty("--theme-reveal-start", from);
+    try {
+      const transition = document.startViewTransition(() => flushSync(apply));
+      active.current = transition;
+      void transition.finished.catch(() => {});
+      await transition.ready;
+      animation.current = root.animate({ clipPath: [from, to] }, {
+        duration: 400, easing: "ease-in-out", fill: "forwards", pseudoElement: "::view-transition-new(root)",
+      });
+      await animation.current.finished;
+      transition.skipTransition();
+    } catch {
+      apply();
+      active.current?.skipTransition();
+    } finally {
+      animation.current?.cancel(); animation.current = null;
+      active.current = null; busy.current = false;
+      root.removeAttribute("data-theme-reveal");
+      root.style.removeProperty("--theme-reveal-start");
+    }
   }
   return <Button variant="ghost" size="icon" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>{theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}</Button>;
 }
