@@ -21,6 +21,7 @@ export function Particles({ quantity = 100, mobileQuantity = 35, ease = 80 }: {
     const mobile = window.matchMedia("(max-width: 699px)");
     const root = document.documentElement;
     let dark = root.classList.contains("dark");
+    let revealing = root.hasAttribute("data-theme-reveal");
     let width = 0, height = 0, dpr = 1, raf = 0, lastTime = 0;
     let particles: Particle[] = [];
     const mouse = { x: 0, y: 0 };
@@ -58,7 +59,7 @@ export function Particles({ quantity = 100, mobileQuantity = 35, ease = 80 }: {
     };
     const stop = () => { cancelAnimationFrame(raf); raf = 0; lastTime = 0; };
     const animate = (time: number) => {
-      if (reduced.matches || document.hidden || !width || !height) { stop(); draw(); return; }
+      if (reduced.matches || document.hidden || revealing || !width || !height) { stop(); draw(); return; }
       const step = lastTime ? Math.min((time - lastTime) / (1000 / 60), 3) : 1;
       lastTime = time;
       draw(step);
@@ -68,7 +69,7 @@ export function Particles({ quantity = 100, mobileQuantity = 35, ease = 80 }: {
       stop();
       if (reduced.matches) { mouse.x = 0; mouse.y = 0; }
       draw();
-      if (!reduced.matches && !document.hidden && width && height) raf = requestAnimationFrame(animate);
+      if (!reduced.matches && !document.hidden && !revealing && width && height) raf = requestAnimationFrame(animate);
     };
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -93,8 +94,10 @@ export function Particles({ quantity = 100, mobileQuantity = 35, ease = 80 }: {
     const themeObserver = new MutationObserver(() => {
       const next = root.classList.contains("dark");
       if (next !== dark) { dark = next; draw(); }
+      const nextRevealing = root.hasAttribute("data-theme-reveal");
+      if (nextRevealing !== revealing) { revealing = nextRevealing; syncMotion(); }
     });
-    themeObserver.observe(root, { attributes: true, attributeFilter: ["class"] });
+    themeObserver.observe(root, { attributes: true, attributeFilter: ["class", "data-theme-reveal"] });
     reduced.addEventListener("change", syncMotion);
     mobile.addEventListener("change", resize);
     document.addEventListener("visibilitychange", syncMotion);

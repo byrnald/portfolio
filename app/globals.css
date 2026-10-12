@@ -44,6 +44,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+html.lenis { scroll-behavior: auto; }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-body); font-size: 1rem; line-height: 1.7; }
 button,a { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }
@@ -58,11 +59,18 @@ svg { flex-shrink: 0; }
 .particles-background { --particle-gutter: max(0px, calc((100% - var(--page-frame-width)) / 2)); position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; mask-image: linear-gradient(to right, #000 0 var(--particle-gutter), transparent var(--particle-gutter) calc(100% - var(--particle-gutter)), #000 calc(100% - var(--particle-gutter)) 100%); }
 .particles-background canvas { display: block; width: 100%; height: 100%; }
 @media (max-width: 844px) { .particles-background { display: none; } }
-html[data-theme-reveal="active"]::view-transition-group(root) { animation-duration: 400ms; }
+html[data-theme-reveal="active"]::view-transition-group(root) { animation: none; }
+html[data-theme-reveal="active"] *,
+html[data-theme-reveal="active"] *::before,
+html[data-theme-reveal="active"] *::after { transition: none !important; }
 html[data-theme-reveal="active"]::view-transition-old(root),
 html[data-theme-reveal="active"]::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 html[data-theme-reveal="active"]::view-transition-old(root) { z-index: 1; }
-html[data-theme-reveal="active"]::view-transition-new(root) { z-index: 2; clip-path: var(--theme-reveal-start); }
+html[data-theme-reveal="active"]::view-transition-new(root) { z-index: 2; clip-path: var(--theme-reveal-start); will-change: clip-path; animation: theme-circle-reveal 400ms ease-in-out both; }
+@keyframes theme-circle-reveal {
+  from { clip-path: var(--theme-reveal-start); }
+  to { clip-path: var(--theme-reveal-end); }
+}
 .constellation-background { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; color: var(--muted-foreground); }
 .constellation-lane { --constellation-size: min(10rem, calc(100cqw - 2rem)); position: absolute; inset-block: 0; width: max(0px, calc((100% - var(--page-frame-width)) / 2)); overflow: hidden; container: constellation-gutter / inline-size; }
 .constellation-lane-left { left: 0; }

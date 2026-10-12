@@ -11,13 +11,12 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const busy = useRef(false);
   const active = useRef<ViewTransition | null>(null);
-  const animation = useRef<Animation | null>(null);
   useEffect(() => { setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light"); }, []);
   useEffect(() => () => {
     active.current?.skipTransition();
-    animation.current?.cancel();
     document.documentElement.removeAttribute("data-theme-reveal");
     document.documentElement.style.removeProperty("--theme-reveal-start");
+    document.documentElement.style.removeProperty("--theme-reveal-end");
   }, []);
   async function toggleTheme(event: React.MouseEvent<HTMLButtonElement>) {
     if (busy.current) return;
@@ -46,24 +45,21 @@ export function ThemeToggle() {
     busy.current = true;
     root.dataset.themeReveal = "active";
     root.style.setProperty("--theme-reveal-start", from);
+    root.style.setProperty("--theme-reveal-end", to);
     try {
       const transition = document.startViewTransition(() => flushSync(apply));
       active.current = transition;
-      void transition.finished.catch(() => {});
-      await transition.ready;
-      animation.current = root.animate({ clipPath: [from, to] }, {
-        duration: 400, easing: "ease-in-out", fill: "forwards", pseudoElement: "::view-transition-new(root)",
-      });
-      await animation.current.finished;
-      transition.skipTransition();
+      // I let CSS start the reveal with the snapshots, without a second JS animation setup.
+      void transition.ready.catch(() => {});
+      await transition.finished;
     } catch {
       apply();
       active.current?.skipTransition();
     } finally {
-      animation.current?.cancel(); animation.current = null;
       active.current = null; busy.current = false;
       root.removeAttribute("data-theme-reveal");
       root.style.removeProperty("--theme-reveal-start");
+      root.style.removeProperty("--theme-reveal-end");
     }
   }
   return <Button variant="ghost" size="icon" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>{theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}</Button>;
