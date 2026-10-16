@@ -6,9 +6,41 @@
     <title>Byron Aldas | IT, cloud & curiosity</title>
     <meta name="description" content="Rutgers ITI student exploring cloud engineering, backend development, AI, and homelabs. Explore Byron Aldas's projects, experience, and resume." />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="stylesheet" href="/components/ui/portfolio-loading-preview.css" />
     <script>try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.classList.toggle('dark',t==='dark');document.documentElement.style.colorScheme=t}}catch(e){}</script>
   </head>
   <body class="antialiased">
+    <div id="portfolio-boot-loader" class="portfolio-loading-preview" role="status" aria-label="Loading portfolio" hidden>
+      <div class="portfolio-loader-content" aria-hidden="true">
+        <div class="portfolio-loader-mark"><span class="loader-bracket left visible">[</span><span><span class="loader-letter visible">B</span><span class="loader-letter visible">A</span></span><span class="loader-bracket right visible">]</span></div>
+        <p class="portfolio-loader-name visible">Byron Aldas</p>
+        <p class="portfolio-loader-command"><span class="loader-prompt">&gt;</span><span>loading portfolio</span><span class="loader-caret"></span></p>
+      </div>
+    </div>
+    <script>
+      (() => {
+        let firstVisit = true;
+        try { firstVisit = sessionStorage.getItem('portfolio-ready-this-session') !== '1'; } catch {}
+        const boot = window.portfolioLoaderBoot = { firstVisit, shown: false, startedAt: Date.now() };
+        const show = () => {
+          boot.shown = true;
+          const loader = document.getElementById('portfolio-boot-loader');
+          loader.hidden = false;
+          if (!firstVisit) return;
+          const draw = () => {
+            const elapsed = matchMedia('(prefers-reduced-motion: reduce)').matches ? 2100 : Date.now() - boot.startedAt;
+            loader.querySelectorAll('.loader-bracket').forEach(el => el.classList.toggle('visible', elapsed >= 80));
+            loader.querySelectorAll('.loader-letter').forEach((el, i) => el.classList.toggle('visible', elapsed >= 220 + i * 100));
+            loader.querySelector('.portfolio-loader-name').classList.toggle('visible', elapsed >= 450);
+            loader.querySelector('.portfolio-loader-command span:nth-child(2)').textContent = elapsed < 480 ? '' : 'loading portfolio'.slice(0, Math.floor((elapsed - 480) / 28) + 1);
+            if (elapsed < 1000) boot.animationTimer = window.setTimeout(draw, 28);
+          };
+          draw();
+        };
+        if (firstVisit) show();
+        else boot.timer = window.setTimeout(show, 400);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/main.tsx"></script>
   </body>
