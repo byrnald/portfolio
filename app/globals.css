@@ -168,6 +168,49 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 600; line-height: 1.25;
 .row-chevron.is-open { transform: rotate(180deg); }
 .row-content { overflow: hidden; }
 .row-content-inner { margin: 0 1.15rem; padding-block: 1.15rem; border-top: 1px dashed var(--border); font-size: .875rem; color: var(--muted-foreground); }
+.featured-project {
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.featured-project-copy {
+  display: grid;
+  justify-items: start;
+  gap: .8rem;
+  padding: clamp(1rem, 4vw, 1.75rem);
+}
+.featured-project-copy h3 {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+}
+.featured-project-copy p:not(.eyebrow) {
+  max-width: 65ch;
+  color: var(--muted-foreground);
+  font-size: .875rem;
+  line-height: 1.65;
+}
+.featured-project-preview {
+  border-top: 1px solid var(--border);
+  background: var(--muted);
+}
+.featured-project-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+  object-position: top;
+}
+.featured-project-preview figcaption {
+  padding: .65rem clamp(1rem, 4vw, 1.75rem);
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: .75rem;
+}
 .project-details h3 { font-size: .8125rem; font-weight: 500; color: var(--foreground); margin-bottom: .4rem; }
 .pantry-overview { border: 1px solid var(--border); border-radius: var(--radius); background: radial-gradient(ellipse at 50% 0%, var(--accent), transparent 65%), var(--background); padding: 1.25rem; margin-block: 1.25rem; }
 .pantry-topline { display: flex; align-items: center; justify-content: space-between; gap: .75rem; font-size: .6875rem; }
